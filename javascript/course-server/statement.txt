@@ -1,0 +1,69 @@
+Problem Statement: Express Backend for Course System
+
+You are required to build a backend application using Node.js and Express.js for managing course data.
+
+⸻
+
+Task 1: Create Course Data
+
+Create an array named courses with the following data:
+
+const courses = [
+  { id: 1, title: "React Fundamentals", category: "Frontend", instructor: "Arjun" },
+  { id: 2, title: "Node.js and Express Basics", category: "Backend", instructor: "Meera" },
+  { id: 3, title: "MongoDB Essentials", category: "Database", instructor: "Ravi" },
+  { id: 4, title: "Advanced JavaScript Concepts", category: "Frontend", instructor: "Sneha" },
+  { id: 5, title: "REST API Development with Express", category: "Backend", instructor: "Kiran" }
+];
+
+
+⸻
+
+Task 2: Set Up Express Server
+    •   Create an Express server
+    •   Configure it to run on a port
+
+⸻
+
+Task 3: Implement APIs
+
+1. Get All Courses
+
+Create an API to return all courses.
+
+Route:
+GET /courses
+
+⸻
+
+2. Get Course by ID
+
+Create an API to return a course based on the given ID.
+
+Route:
+GET /courses/:id
+
+⸻
+
+3. Search Courses by Title
+
+Create an API to return courses whose title includes the given search text.
+
+Route:
+GET /courses/search?title=value
+
+⸻
+
+4. Filter Courses by Category
+
+Create an API to return courses based on category.
+
+Route:
+GET /courses/filter?category=value
+
+⸻
+
+Task 4: Conditions
+    •   Search must be case-insensitive
+    •   Filter must be case-insensitive
+    •   Return appropriate response when data is not found

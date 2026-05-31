@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Search Page</h1>
+    <form onsubmit="handleSubmit(event)">
+        <label>Enter Course title</label>
+        <input type="text" id="course-title" />
+        <input type="submit" />
+    </form>
+    <ul id="list"></ul>
+    <script>
+        const ulTagHandle = document.getElementById('list')
+        // document.body.appendChild(Object.assign(document.createElement('h2'), { id: 'cd', textContent: 'd' }));
+        // another way for the above
+        // const newH2 = document.createElement('h2');
+        // newH2.id = 'cd';
+        // newH2.textContent = 'd';
+        // document.body.appendChild(newH2);
+        const h2Tag = document.createElement('h2');
+        const handleSubmit = (event) => {
+            event.preventDefault();
+            const title = document.getElementById("course-title").value;
+            // console.log("form submitted with",title);
+            const url = "http://localhost:4000/courses/search?title=" + title;
+            console.log(url);
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", url);
+            xhr.send();
+
+            xhr.onload = function () {
+                ulTagHandle.innerHTML = "";
+                const result = JSON.parse(xhr.responseText);
+                console.log(result.length);
+
+                for (let course of result) {
+                    const liTag = document.createElement('li');
+                    liTag.textContent = `${course.title}, ${course.category}`;
+                    ulTagHandle.appendChild(liTag);
+                }
+
+                h2Tag.textContent = "length=" + result.length;
+                //  h2Tag.id='status-tag';
+                //  document.body.appendChild(h2Tag);
+                ulTagHandle.insertAdjacentElement('afterend', h2Tag);
+
+            }
+
+        }
+    </script>
+</body>
+
+</html>
+
+
+<!-- line by line explation -->
+<!-- 
+[06/04, 12:05 pm] Anirudh Dct: // This line declares a constant variable 'listItems' and assigns it the result of
+calling the map method on the 'courses' array. The map method creates a new array by applying the provided callback
+function to each element of the original array. This approach is used because it's the standard functional programming
+pattern in JavaScript for transforming arrays without mutating the original data, which aligns with React's preference
+for immutable data patterns. Technically, map iterates through each element of 'courses', passes it to the anonymous
+function as the parameter 'ele', and collects the return values into a new array that gets assigned to 'listItems'.
+const listItems = courses.map(function (ele) {
+// This line returns a JSX element representing an HTML list item (<li>) containing the title property of the current
+    array element. The curly braces {} are JSX syntax that allows embedding JavaScript expressions within the markup.
+    This approach is used because JSX provides a declarative way to describe UI components in React, making the code
+    more readable and maintainable than manually creating DOM elements with vanilla JavaScript. Technically, this JSX
+    gets transpiled to React.createElement() calls that create React elements representing the list items, with the
+    dynamic content interpolated from the data object's properties.
+    return
+<li> {ele.title} </li>
+});
+[06/04, 1:40 pm] Anirudh Dct: // This line declares a function named handleSubmit using arrow function syntax that takes
+an event parameter. It's designed to be an event handler for form submission events, where the event object contains
+information about the triggering event. The arrow function syntax provides lexical scoping of 'this', making it cleaner
+than traditional function expressions, and the const declaration ensures the function reference cannot be reassigned,
+promoting code stability.
+const handleSubmit = (event) => {
+// This method call prevents the browser's default form submission behavior, which would cause a page reload. This is
+essential for single-page applications (SPAs) where you want to handle form data via JavaScript without disrupting the
+user experience. Without this, the page would refresh, losing any JavaScript state and interrupting the asynchronous
+request flow, making it a critical step for modern web applications that rely on AJAX patterns.
+event.preventDefault();
+// This line retrieves the current value from an HTML input element with ID 'course-title' and stores it in a constant
+variable. Using getElementById is a direct DOM access method that's faster than querySelector for ID lookups, and
+storing the value immediately prevents potential timing issues if the DOM changes. The const declaration ensures the
+title variable cannot be reassigned, which is appropriate since the form value shouldn't change during this synchronous
+operation.
+const title = document.getElementById('course-title').value;
+// This constructs a URL string for the API endpoint by concatenating a base URL with the title parameter as a query
+string. While simple string concatenation works, this approach doesn't properly URL-encode the title value, which could
+cause issues with special characters or spaces. The explicit hardcoding of localhost:4000 suggests this is development
+code, and in production, this would typically use environment variables or configuration files to manage API endpoints.
+const url = "http://localhost:4000/courses/search?title="+title
+// This creates a new XMLHttpRequest object, which is the traditional API for making HTTP requests in JavaScript. While
+still functional, XMLHttpRequest is considered legacy compared to the modern Fetch API, but it's used here possibly for
+broader browser compatibility or specific feature needs. The object provides methods and properties to configure and
+send HTTP requests, and storing it in a const variable ensures the reference to this specific request instance remains
+consistent throughout the function's execution.
+const xhr = new XMLHttpRequest();
+// This configures the XMLHttpRequest object for a GET request to the specified URL. The open method initializes the
+request but doesn't send it yet, allowing for additional configuration like setting headers. Using GET is appropriate
+here since we're retrieving data based on a search query, and GET requests are idempotent and cacheable. However, note
+that the URL is constructed twice (lines 4 and 6), which violates DRY principles and could lead to maintenance issues if
+the endpoint changes.
+xhr.open("GET", url);
+// This method actually sends the configured HTTP request to the server. For GET requests, send() is called without a
+body since data is passed in the URL. This is an asynchronous operation that doesn't block the JavaScript execution
+thread, allowing the browser to remain responsive. The request is now in flight, and the code will continue to execute
+while waiting for the server response, demonstrating non-blocking I/O which is fundamental to JavaScript's event-driven
+architecture.
+xhr.send();
+// This assigns an event handler function that will be called when the XMLHttpRequest successfully completes (load
+event). The onload event fires when the request completes successfully, regardless of HTTP status code, unlike
+onreadystatechange which requires checking readyState. Using a function expression here creates a closure that has
+access to the surrounding variables, though arrow functions would be more modern. This pattern separates request
+configuration from response handling, following separation of concerns.
+xhr.onload = function(){
+// This parses the response text from the server as JSON, converting it into a JavaScript object. JSON.parse is
+synchronous and will throw an error if the response isn't valid JSON, so in production code this should be wrapped in
+try-catch. The assumption that the server returns JSON is implicit here, which could fail if the server returns an error
+HTML page or other non-JSON content. Parsing the response allows the data to be manipulated as native JavaScript objects
+rather than working with raw strings.
+const result = JSON.parse(xhr.responseText);
+// This outputs the parsed result to the browser's console, which is useful for debugging during development but
+provides no user-facing functionality. In a production application, this would typically be replaced with code that
+updates the DOM to display the results to users. Console logging is a common debugging technique but should be removed
+or conditionally executed in production code to avoid exposing internal data and cluttering console output.
+console.log(result);
+}
+}
+-->

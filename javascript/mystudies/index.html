@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h2>Web Worker </h2>
+
+    <button id="counterBtn">Click Me (Counter: 0)</button>
+    <br><br>
+
+    <button id="startWork">Start Heavy Loop (Worker)</button>
+    <p id="status">Status: while loop Not STarted yet</p>
+
+    <script>
+        let count = 0;
+        const counterBtn = document.getElementById('counterBtn');
+        const statusText = document.getElementById('status');
+        const startBtn = document.getElementById('startWork');
+
+        // 1. Logic for the "Responsive" button
+        counterBtn.onclick = () => {
+            count++;
+            counterBtn.innerText = `Click Me(Counter: ${ count })`;
+        };
+
+        // 2. Setup the Worker
+        const myWorker = new Worker('worker.js');
+
+        startBtn.onclick = () => {
+            statusText.innerText = "Status: Worker is busy calculating...";
+            startBtn.disabled = true; // Prevent double clicks
+
+            // Send message to start the loop
+            myWorker.postMessage('start');
+        };
+
+        // 3. Listen for the finish line
+        myWorker.onmessage = (e) => {
+            statusText.innerText = "Status: " + e.data;
+            startBtn.disabled = false;
+        };
+    </script>
+</body>
+
+</html>
+<!-- 
+https://gemini.google.com/share/a81255587a5e
+ link to explanatipon-->
+<!-- 
+ Explanation of the Workflow
+new Worker('worker.js'): This constructor creates a new thread. The browser starts downloading and executing worker.js in parallel.
+
+postMessage(): This is the "bridge." Since the main thread and the worker live in different memory spaces, they cannot share variables directly. They send copies of data back and forth using this method.
+
+self.onmessage: Inside the worker, self refers to the worker's global scope. It waits for the main thread to give it "work."
+
+Non-Blocking Behavior: While the while loop is churning through a billion numbers in worker.js, the main thread remains completely free. If you had a spinning loader or a button on your HTML page, they would still work perfectly.
+
+Important Restrictions
+No DOM Access: You cannot use document.querySelector or window.alert inside worker.js. The worker has no access to the visual interface.
+
+Same-Origin Policy: The worker script must be hosted on the same domain as the main page.
+
+File Protocol: Web Workers usually don't work if you just double-click an HTML file (file://). You need to run them through a local server (like the VS Code "Live Server" extension).
+
+ -->

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blocking Code Demo</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .box { padding: 20px; border: 2px solid #333; display: inline-block; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        #status { font-weight: bold; color: red; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>The "Freeze" Test</h2>
+        
+        <button id="counterBtn">UI Check: Counter 0</button>
+        <p>Click the button above to see it increment. It's fast!</p>
+        
+        <hr>
+
+        <button id="blockBtn" style="background-color: #ffcccc;">Run Heavy Loop (Blocks UI)</button>
+        <p id="status">Status: Ready</p>
+    </div>
+
+    <script>
+        let count = 0;
+        const counterBtn = document.getElementById('counterBtn');
+        const blockBtn = document.getElementById('blockBtn');
+        const statusText = document.getElementById('status');
+
+        // Normal UI interaction
+        counterBtn.onclick = () => {
+            count++;
+            counterBtn.innerText = `UI Check: Counter ${count}`;
+        };
+
+        // THE BLOCKING CODE
+        blockBtn.onclick = () => {
+            statusText.innerText = "Status: CALCULATING... (UI IS NOW FROZEN)";
+            
+            // We use a small timeout so the status text has a 
+            // split second to render before the loop locks the thread.
+            setTimeout(() => {
+                const startTime = Date.now();
+                let sum = 0;
+
+                // This heavy loop runs on the MAIN THREAD
+                // Adjust the number of zeros if your PC is too fast/slow
+                for (let i = 0; i < 4000000000; i++) {
+                    sum += i;
+                }
+
+                const endTime = Date.now();
+                statusText.innerText = `Status: Done in ${(endTime - startTime)/1000}s!`;
+                alert("Loop finished. Notice how the counter wouldn't move?");
+            }, 50);
+        };
+    </script>
+</body>
+</html>

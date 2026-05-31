@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Courses UI</title>
+</head>
+
+<body>
+    <h2>Listing Courses-<span id="count">0</span></h2>
+    <button onclick="handleClick()">fetch courses</button>
+    <ul id="list"></ul>
+    <script src="https://unpkg.com/axios@1.13.2/dist/axios.min.js"></script>
+    <script>
+        // const ulTag = document.getElementById('list'); 
+        const ulTag = document.querySelector("#list");
+        const countHandle = document.getElementById('count')
+
+        function handleClick() {
+            // axios using
+            axios.get('http://localhost:4000/courses')
+                .then((courses) => {
+                    ulTag.innerHTML = "";
+                    countHandle.textContent=courses.data.length;
+                    for(let course of courses.data) {
+                    const liTag = document.createElement('li');  
+                    liTag.textContent = course.title;   
+                    ulTag.appendChild(liTag); 
+                }
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+
+
+
+            //fetch instead  
+
+            // fetch('http://localhost:4000/courses')
+            //     .then(res => {
+
+            //         return res.json();//pasrse the json data
+            //     })
+            //     .then((courses => {
+            //         console.log(courses);
+            //         ulTag.innerHTML = "";
+            //         countHandle.textContent=courses.length;
+            //         for(let course of courses) {
+            //         const liTag = document.createElement('li');  
+            //         liTag.textContent = course.title;   
+            //         ulTag.appendChild(liTag); 
+            //     }
+            //     }))
+            //     .catch((err) => {
+            //         console.log(err);
+            //     })
+
+
+
+            // const xhr = new XMLHttpRequest(); 
+            // xhr.open("GET", "http://localhost:4000/courses"); 
+            // xhr.send(); 
+            // // success response
+            // xhr.onload = function(){
+            //     ulTag.innerHTML = "";
+
+            //     const result = xhr.responseText; 
+            //     const courses = JSON.parse(result); 
+            //     countHandle.textContent=courses.length;
+            //     for(let course of courses) {
+            //         const liTag = document.createElement('li');  
+            //         liTag.textContent = course.title;   
+            //         ulTag.appendChild(liTag); 
+            //     }
+            // }
+            // // error response 
+            // xhr.onerror = function(){
+
+            // }
+        }
+
+    </script>
+</body>
+
+</html>

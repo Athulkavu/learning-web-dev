@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>User UI</title>
+    </head>
+    <body>
+        <h2>Listing Courses</h2>
+        <button onclick="handleClick()">fetch users</button>
+        <ul id="list"></ul>
+
+        <script>
+            // const ulTag = document.getElementById('list'); 
+            const ulTag = document.querySelector("#list"); 
+
+            function handleClick(){
+                const xhr = new XMLHttpRequest(); 
+                xhr.open("GET", "http://localhost:3050/users"); 
+                xhr.send(); 
+                // success response
+                xhr.onload = function(){
+                    ulTag.innerHTML = "";
+                   
+                    const result = xhr.responseText; 
+                    const users = JSON.parse(result); 
+                    for(let user of users) {
+                        const liTag = document.createElement('li');  
+                        liTag.textContent = user.name;   
+                        ulTag.appendChild(liTag); 
+                    }
+                }
+                // error response 
+                xhr.onerror = function(){
+
+                }
+            }
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    async function getUserDetails() {
+        const userId = prompt("Enter a user id");
+        try {
+            const userResponse = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
+            console.log(userResponse.data);
+            const todosResponse = await axios.get(`https://jsonplaceholder.typicode.com/todos?userId=${userResponse.data.id}`)
+            console.log(todosResponse.data);
+        }
+        catch (err) {
+            console.log(err.message);
+        }
+    }
+</script>
+<!-- to run this copy path and run in web and then in console call the fn -->
