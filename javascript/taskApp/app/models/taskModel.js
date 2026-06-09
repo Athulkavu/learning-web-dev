@@ -2,20 +2,24 @@ import mongoose from "mongoose";
 const taskSchema=new mongoose.Schema({
     title:{
         type:String,
-        required:true
+        required:true,
+        trim:true
     },
-    description:{type:String},
+    description:{type:String,
+        trim:true
+    },
     status:{
         type:String,
         required:true,
         enum:["pending","in progress","completed"],
-        default:"pending"
+        default:"pending",
+        trim:true
     },
     priority:{
         type:String,
-        required:true,
+        required:[true,'priority is required'],
         enum:["low","medium","high"],
-        default:"low"
+        default:"low",trim:true
     }
 },{ timestamps: true })
 

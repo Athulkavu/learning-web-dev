@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
-const configureTaskDb=()=>{
+const configureTaskDb=async()=>{
     try{
-        await mongoose.connect('mongodb://127.0.0.1:27017/taskDB')
-        console.log("connected to mongoDB taskDB")
+        
+        const db= await mongoose.connect(process.env.MONGO_URL)
+        console.log("connected to mongoDB TaskDb")//+db will give [object object]--give ,db now entire db things will show as object 
     }
     catch(err){
         console.log("connection error:",err.message)
