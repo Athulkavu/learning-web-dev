@@ -9,10 +9,15 @@ export default function authenticateUser(req, res, next) {
     }
     try {
         const tokenData = jwt.verify(token, process.env.JWT_SECRET)
+        if(!tokenData){
+            return res.status(400).json({errors:'token should be provided correctly'});
+        } 
+        //check whether this is needed or not
         // Token is valid - extract user info
-        req.userId = tokenData.userId
+        req.userId = tokenData.userId;
+        
         next();
     } catch (error) {
-        return res.status(401).json({ errors: error.message })
+        return res.status(401).json({ errors: error.message });
     }
 }
