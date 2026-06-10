@@ -20,6 +20,11 @@ const taskSchema=new mongoose.Schema({
         required:[true,'priority is required'],
         enum:["low","medium","high"],
         default:"low",trim:true
+    },
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        required:true
     }
 },{ timestamps: true })
 

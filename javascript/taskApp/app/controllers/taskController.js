@@ -1,7 +1,7 @@
 import Task from "../models/taskModel.js";
 import errorFormatter from "../helpers/errorFormatter.js";
 export const getAllTasks = (req, res) => {
-    Task.find()
+    Task.find({userId:req.userId})
         .then((tasks) => {
             res.status(200).json({
                 count: tasks.length,
@@ -20,6 +20,7 @@ export const createTask = (req, res) => {
     }
     const { title, description, status, priority } = req.body;
     const newTask = new Task({ title, description, status, priority });
+    newTask.userId=req.userId;
     newTask.save()
         .then(savedTask => res.status(201).json(savedTask))
         .catch(err => {
@@ -32,7 +33,8 @@ export const createTask = (req, res) => {
 
 export const getTaskById = (req, res) => {
     const { id } = req.params;
-    Task.findById(id)
+    // Task.findById(id) tasks.find(ele=>ele._id==id)
+    Task.findOne({userId:req.userId,_id:id})
         .then(task => {
             if (!task) {
                 return res.status(404).json({ message: "Task not found" });
@@ -53,7 +55,8 @@ export const updateTask = (req, res) => {
     }
     const { id } = req.params;
     const { title, description, status, priority } = req.body;
-    Task.findByIdAndUpdate(id, { title, description, status, priority }, {
+    // Task.findByIdAndUpdate dont use because only that one users one task need to be updated
+    Task.findOneAndUpdate({userId:req.userId,_id:id}, { title, description, status, priority }, {
         returnDocument: 'after',
         runValidators: true
     })
@@ -74,7 +77,8 @@ export const updateTask = (req, res) => {
 
 export const deleteTask = (req, res) => {
     const { id } = req.params;
-    Task.findByIdAndDelete(id)
+    // Task.findByIdAndDelete(id)
+    Task.findOneAndDelete({userId:req.userId,_id:id})
         .then(deletedTask => {
             if (!deletedTask) return res.status(404).json({ message: "Task not found" });
             res.json({ message: "Task deleted successfully", deletedTask });
