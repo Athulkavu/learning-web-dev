@@ -50,3 +50,4 @@ const error = {
 }
 
 console.log(errorFormatter(error)); // output should be this [ { name: "name should not be empty"}, { price: "price is required"} ]
+
