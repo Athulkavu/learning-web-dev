@@ -122,7 +122,7 @@ app.delete('/products/:id', async (req, res) => {
 app.post('/create-product', async (req, res) => {
     try {
         const { name, price } = req.body;
-        const product = new Product();
+        // const product = new Product();
         const product = new Product({
             name: name,
             price: price
@@ -135,7 +135,9 @@ app.post('/create-product', async (req, res) => {
         res.status(201).json(productRecord);
     } catch (err) {
         // Handle any errors that occurred during save() or other synchronous operations inside the try block
-        res.status(400).json(errorFormatter(err));
+        // res.status(400).json(errorFormatter(err));
+        console.log(err);
+         res.status(400).json( err);
     }
 });
 
