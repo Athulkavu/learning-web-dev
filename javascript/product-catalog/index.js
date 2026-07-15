@@ -135,9 +135,9 @@ app.post('/create-product', async (req, res) => {
         res.status(201).json(productRecord);
     } catch (err) {
         // Handle any errors that occurred during save() or other synchronous operations inside the try block
-        // res.status(400).json(errorFormatter(err));
+        res.status(400).json(errorFormatter(err));
         console.log(err);
-         res.status(400).json( err);
+        //  res.status(400).json( err);
     }
 });
 

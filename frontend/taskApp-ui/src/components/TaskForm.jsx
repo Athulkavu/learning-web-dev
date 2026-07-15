@@ -30,11 +30,12 @@ export default function TaskForm(){
         const response=await axios.post('/create-product/',form)
         console.log(response.data);
         addProduct(response.data);
-        setForm(response.data);
+        setForm(formInitialData);
         setServerError({});
        
     } catch (error) {
-        console.log(error.response);
+        console.log(error.response);//analyse the error object data structor
+        // console.log(error.response.data);
         // if(error.response.status===400){
             // setServerError(error.response.data.errors);
         // }

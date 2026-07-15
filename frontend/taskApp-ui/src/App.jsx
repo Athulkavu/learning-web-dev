@@ -64,7 +64,7 @@ function App() {
   }, []); 
 
   useEffect(() => {
-    document.title = `total-${products.length} products`;
+    document.title = `total-${products.data.length} products`;
   }, [products]);
 
   const removeTask=(_id)=>{
@@ -79,6 +79,7 @@ function App() {
   const addProduct=(product)=>{
     // setProducts([...products,product]);
     setProducts({...products,data:[...products.data,product]});//reac &redux usde this type
+    // products.data.push(product)//react toolkit uses this->mutable code->but internaaly converted to immutable using immerJs library
   }
 
   const editProduct=(product)=>{
