@@ -3,9 +3,11 @@ import configureDb from "./config/db.js";
 import Team from "./app/models/teamModel.js";
 import errorFormatter from "./app/helpers/errorFormatter.js";
 import Match from "./app/models/matchModel.js"; 
+import cors from "cors";
 import { matchValidationSchema } from "./app/validations/matchValidationSchema.js"; 
 import { checkSchema, validationResult } from "express-validator";
 const app = express();
+app.use(cors());
 const port = 3356;
 
 app.use(express.json());
@@ -152,7 +154,10 @@ app.get('/api/matches/:id', async (req, res) => {
 //         res.status(400).json({ error: err.message });
 //     }
 // });
-// Update and delte decided on quary params
+// Update and reset decided on quary params
+
+// use $inc
+
 app.put('/api/matches/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -176,11 +181,9 @@ app.put('/api/matches/:id', async (req, res) => {
         
         else {
             return res.status(400).json({ 
-                error: "Invalid action query parameter Use '?action=update' or '?action=reset'." 
+                error: "Invalid action'." 
             });
         }
-
-        
         const updatedMatch = await Match.findByIdAndUpdate(id, updateData, { returnDocument: 'after', runValidators: true })
             .populate('team1_id', 'name')
             .populate('team2_id', 'name');
@@ -234,12 +237,10 @@ app.delete('/api/teams/:id', async (req, res) => {
             ]
         });
 
-
         if (hasMatchHistory) {
            
             team.isDeleted = true;
             await team.save();
-            
             return res.status(200).json({ 
                 message: "Team has historical matches. Soft deleted successfully.remove all other matches of this team for permenent delete ", 
                 type: "soft",
@@ -247,7 +248,6 @@ app.delete('/api/teams/:id', async (req, res) => {
             });
         } else {
             await Team.findByIdAndDelete(id);
-            
             return res.status(200).json({ 
                 message: "Team had no match history. Permanently deleted from database.", 
                 type: "permanent",
