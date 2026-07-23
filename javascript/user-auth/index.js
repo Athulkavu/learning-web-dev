@@ -1,12 +1,16 @@
 import express from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
 import { configureDB } from './config/db.js';
 import usersController from './app/controllers/userController.js';
 import {userLoginSchema, userRegistrationSchema} from './app/validations/userValidationSchema.js';
 import {checkSchema} from 'express-validator';
-import dotenv from 'dotenv';
+
 import authenticateUser from './app/middlewares/authenticate.js';
-dotenv.config();
+
 const app = express();
+import cors from 'cors';
+app.use(cors());
 const PORT = 3050;
 
 // Middleware to parse incoming JSON data
