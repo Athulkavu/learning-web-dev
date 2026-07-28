@@ -169,5 +169,27 @@ usersController.profile = async (req, res) => {
         res.status(500).json({ errors: [{ msg: 'Something went wrong fetching profile' }] });
     }
 };
+usersController.checkField=async(req,res)=>{//here we get field and value for if more than one field is there but only one is we check but sir had this 2 field username and email thats why code like this othervise only value we need for one
+    const {field,value}=req.query;
+    console.log(field,value);
+    if(!field||!value){
+        return res.status(400).json({error:"field and value is required"});
+    }
+    let user;
+
+    if(field=="email"){
+        user=await User.findOne({email:value})
+    }
+    //if u had a user name field also check for that also ,also if more than one type of field  u can use the computed property but thefield should be currect that only otherwise error
+    else{
+        return res.status(400).json({error:"bad request"})
+    }
+    if(user){
+        return res.status(409).json({field:field,success:false})
+    }
+    return res.json({field:field,success:true})
+
+
+}
 
 export default usersController;

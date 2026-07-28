@@ -7,6 +7,7 @@ import {userLoginSchema, userRegistrationSchema} from './app/validations/userVal
 import {checkSchema} from 'express-validator';
 
 import authenticateUser from './app/middlewares/authenticate.js';
+import categoryRoutes from './app/routes/categoryRoutes.js';
 
 const app = express();
 import cors from 'cors';
@@ -27,7 +28,10 @@ app.get('/home', (req, res) => {
 });
 app.post('/register',checkSchema(userRegistrationSchema), usersController.register);
 app.post('/login',checkSchema(userLoginSchema), usersController.login);
-app.get('/profile', authenticateUser,usersController.profile)
+app.get('/profile', authenticateUser, usersController.profile);
+app.get('/check-field', usersController.checkField);
+
+app.use('/api/categories', categoryRoutes);
 
 // Start the server
 app.listen(PORT, () => {
