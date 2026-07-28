@@ -6,6 +6,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMessage, setErrmessage] = useState("");
+  const [success,setSuccess]=useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -35,7 +36,18 @@ export default function Register() {
         }
       });
   };
-
+  const handleCheck=(e)=>{
+    const {name,value}=e.target;
+    axios.get(`http://localhost:3050/check-field?field=${name}&value=${value}`)//HERE 2 field and value we send b/c sir have  username and email to check but we have only one but in BE we followed sirs code for this api only
+    .then((response)=>{
+      console.log(response.data);
+      setSuccess(false)
+    })
+    .catch((err)=>{
+      console.log(err.response.data);
+      setSuccess(true)
+    })
+  }
   return (
     <div>
       <h2>Register Component</h2>
@@ -45,9 +57,11 @@ export default function Register() {
           <input
             type="email"
             value={email}
+            name="email"
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={handleCheck}
             placeholder="Enter Email"
-          />
+          />{success&&<p className="error" style={{ color: "red" }}>email is already taken</p>}
         </div>
         <div className="form-group">
           <input

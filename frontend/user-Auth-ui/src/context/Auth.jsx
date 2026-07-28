@@ -34,6 +34,13 @@ export function AuthProvider(props) {
     }
   }, []);
 
+
+  // const handlePageReload=(user)=>{
+  //   // const users = user;
+  //   dispatch({ type: "LOGIN", payload: user });
+  //   navigate("/dashboard");
+  // }
+
   const handleLogin = (user, token) => {
     dispatch({ type: "LOGIN", payload: user });
     localStorage.setItem("token", token); 
@@ -45,7 +52,10 @@ export function AuthProvider(props) {
     localStorage.removeItem("token"); 
     navigate("/login");
   };
-
+//   // show loading if the user is already logged in,but user object is null-ex-when the user closes the website and reopens it later
+// if(localStorage.getItem("token")&&!user){
+//   return <p>loading...</p>
+// }// try to implemnyt this to avoid the if(!user) in every page
  return (
     <AuthContext.Provider
       value={{ ...state, dispatch, handleLogin, handleLogout }}
