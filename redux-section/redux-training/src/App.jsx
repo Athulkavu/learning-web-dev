@@ -1,8 +1,11 @@
 import React from "react";
-function App(){
+import './App.css';
+import NumbersContainer from "./components/numbersApp/NumbersContainer";
+function App(props){
   return(
     <>
     <h1>Random number generator</h1>
+    <NumbersContainer/>
     </>
   )
 }
